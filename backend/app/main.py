@@ -29,6 +29,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
+        "https://emts-nine.vercel.app",
         os.getenv("FRONTEND_URL", "http://localhost:5173"),
     ],
     allow_credentials=True,
