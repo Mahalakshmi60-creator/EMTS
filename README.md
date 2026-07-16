@@ -97,6 +97,20 @@ npm run dev
 | POST | `/api/scanner/scan` | ✅ | AI-powered code scan (rate limited) |
 | GET | `/api/audit` | ✅ | View audit logs (paginated) |
 
+## API Sources / External Services
+
+| Service | Purpose | Provider URL |
+|---------|---------|--------------|
+| **Google Gemini API** | AI-powered secret leak detection in the Scanner module. Uses `gemini-3.5-flash` with fallback to `gemini-2.0-flash` and `gemini-2.0-flash-lite`. | [https://ai.google.dev](https://ai.google.dev) |
+| **Neon Serverless PostgreSQL** | Cloud-hosted PostgreSQL database with connection pooling and SSL. | [https://neon.tech](https://neon.tech) |
+| **Render** | Backend deployment (FastAPI). | [https://render.com](https://render.com) |
+| **Vercel** | Frontend deployment (React + Vite). | [https://vercel.com](https://vercel.com) |
+
+### API Key Setup
+
+- **Gemini API Key**: Obtain from [Google AI Studio](https://aistudio.google.com/apikey). Set as `GEMINI_API_KEY` in backend `.env`.
+- **Neon Database URL**: Obtain from [Neon Console](https://console.neon.tech). Set as `DATABASE_URL` in backend `.env`.
+
 ## Known Limitations
 
 - JWT tokens do not support refresh/revocation (stateless design)

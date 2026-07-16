@@ -49,29 +49,32 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-4 font-sans relative overflow-hidden">
+      {/* Subtle background glow effect (optional for cyber feel) */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[150px] pointer-events-none"></div>
+
       {/* Container */}
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-8 space-y-6">
+      <div className="w-full max-w-md bg-zinc-900/50 backdrop-blur-md border border-zinc-800/80 p-8 space-y-6 z-10 rounded-sm">
         {/* Brand Logo header */}
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="p-3 bg-indigo-600/10 border border-indigo-500/20 rounded-2xl">
-            <Shield className="h-8 w-8 text-indigo-500 animate-pulse" />
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="p-3 bg-zinc-950 border border-zinc-800/80 rounded-sm shadow-inner">
+            <Shield className="h-8 w-8 text-zinc-100" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100">
-            SecureVault <span className="text-indigo-400">AI</span>
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-100">
+            SecureVault <span className="text-zinc-500 font-mono text-sm ml-1">AI</span>
           </h1>
-          <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
-            Enterprise Multi-Tenant Secrets & Certificates Platform
+          <p className="text-xs font-mono text-zinc-500 max-w-xs leading-relaxed uppercase tracking-wider">
+            Enterprise Zero-Trust Platform
           </p>
         </div>
 
         {/* Tab switch */}
-        <div className="flex bg-slate-950 p-1 rounded-lg border border-slate-800">
+        <div className="flex bg-zinc-950 p-1 rounded-sm border border-zinc-800/80">
           <button
             type="button"
             onClick={() => { setIsLogin(true); setError(''); }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-              isLogin ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-sm transition-colors cursor-pointer ${
+              isLogin ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             Sign In
@@ -79,8 +82,8 @@ export const Login = () => {
           <button
             type="button"
             onClick={() => { setIsLogin(false); setError(''); }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-              !isLogin ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-sm transition-colors cursor-pointer ${
+              !isLogin ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             Create Tenant
@@ -88,38 +91,38 @@ export const Login = () => {
         </div>
 
         {error && (
-          <div className="bg-rose-500/10 border border-rose-500/25 text-rose-400 px-3 py-2.5 rounded-lg text-xs leading-relaxed text-center">
+          <div className="bg-rose-500/10 border border-rose-500/30 text-rose-400 px-3 py-2.5 rounded-sm text-xs leading-relaxed text-center font-mono">
             {error}
           </div>
         )}
 
         {/* Auth form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Email Address</label>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-wider">Email Address</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-2.5 h-4.5 w-4.5 text-slate-500" />
+              <Mail className="absolute left-3 top-2.5 h-4 w-4 text-zinc-600" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-zinc-950 border border-zinc-800/80 rounded-sm pl-10 pr-3 py-2 text-sm font-mono text-zinc-300 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-colors"
                 placeholder="operator@tenant.com"
               />
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Password</label>
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-wider">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-2.5 h-4.5 w-4.5 text-slate-500" />
+              <Lock className="absolute left-3 top-2.5 h-4 w-4 text-zinc-600" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-zinc-950 border border-zinc-800/80 rounded-sm pl-10 pr-3 py-2 text-sm font-mono text-zinc-300 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-colors"
                 placeholder="••••••••"
               />
             </div>
@@ -128,27 +131,27 @@ export const Login = () => {
           {/* Registration fields */}
           {!isLogin && (
             <>
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Organization / Tenant Name</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-wider">Organization / Tenant Name</label>
                 <div className="relative">
-                  <Building className="absolute left-3 top-2.5 h-4.5 w-4.5 text-slate-500" />
+                  <Building className="absolute left-3 top-2.5 h-4 w-4 text-zinc-600" />
                   <input
                     type="text"
                     required={!isLogin}
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-zinc-950 border border-zinc-800/80 rounded-sm pl-10 pr-3 py-2 text-sm font-mono text-zinc-300 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-colors"
                     placeholder="e.g. Acme Corp"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Default Operator Role</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-wider">Default Operator Role</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-400 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                  className="w-full bg-zinc-950 border border-zinc-800/80 rounded-sm px-3 py-2 text-sm font-mono text-zinc-400 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 cursor-pointer transition-colors"
                 >
                   <option value="operator">Operator (Read/Write)</option>
                   <option value="admin">Administrator (Full Access)</option>
@@ -158,13 +161,15 @@ export const Login = () => {
             </>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition-all cursor-pointer shadow-[0_4px_20px_rgba(99,102,241,0.35)]"
-          >
-            {loading ? 'Authenticating...' : isLogin ? 'Access Control Center' : 'Provision Tenant Account'}
-          </button>
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center py-2.5 bg-white hover:bg-zinc-200 disabled:opacity-50 text-zinc-950 rounded-sm text-sm font-bold transition-colors cursor-pointer"
+            >
+              {loading ? 'Authenticating...' : isLogin ? 'Access Control Center' : 'Provision Tenant Account'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

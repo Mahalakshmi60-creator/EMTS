@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import api from '../services/api';
-import { Scan, Terminal, AlertTriangle, ShieldCheck, RefreshCw, FileWarning } from 'lucide-react';
+import { Scan, Terminal, ShieldCheck, RefreshCw, FileWarning } from 'lucide-react';
 
 interface Finding {
   line_number: number;
@@ -28,7 +28,6 @@ export const Scanner = () => {
     e.preventDefault();
     if (!fileName || !code) return;
 
-    // Frontend validation of payload size (500 KB)
     const codeSize = new Blob([code]).size;
     if (codeSize > 500 * 1024) {
       setError(`File size (${(codeSize / 1024).toFixed(2)} KB) exceeds the strict 500 KB limit.`);
@@ -59,162 +58,157 @@ export const Scanner = () => {
 
   const getSeverityBadge = (severity: string) => {
     const s = severity.toUpperCase();
+    const base = "px-2 py-0.5 rounded-none text-[10px] font-bold uppercase tracking-widest font-mono border";
     switch (s) {
       case 'CRITICAL':
-        return <span className="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded text-xs font-bold uppercase animate-pulse">Critical</span>;
+        return <span className={`${base} bg-rose-500/10 text-rose-400 border-rose-500/30 animate-pulse`}>CRITICAL</span>;
       case 'HIGH':
-        return <span className="bg-red-500/10 text-red-400 border border-red-500/25 px-2 py-0.5 rounded text-xs font-bold uppercase">High</span>;
+        return <span className={`${base} bg-red-500/10 text-red-400 border-red-500/30`}>HIGH</span>;
       case 'MEDIUM':
-        return <span className="bg-amber-500/10 text-amber-400 border border-amber-500/25 px-2 py-0.5 rounded text-xs font-bold uppercase">Medium</span>;
+        return <span className={`${base} bg-amber-500/10 text-amber-400 border-amber-500/30`}>MEDIUM</span>;
       default:
-        return <span className="bg-yellow-500/10 text-yellow-400 border border-yellow-500/25 px-2 py-0.5 rounded text-xs font-bold uppercase">Low</span>;
+        return <span className={`${base} bg-yellow-500/10 text-yellow-400 border-yellow-500/30`}>LOW</span>;
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Title */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-100 flex items-center gap-2">
-          <Scan className="h-6 w-6 text-indigo-400" />
-          AI Leak Scanner
-        </h1>
-        <p className="text-slate-400 text-sm mt-1">
-          Scan source code snippets using Google Gemini 3.5 Flash for hardcoded API keys, tokens, or credential leaks.
-        </p>
+    <div className="flex flex-col h-full bg-black">
+      {/* Top scanner bar */}
+      <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-950 px-6 py-2.5 shrink-0">
+        <div className="flex items-center gap-3">
+          <Scan className="h-4 w-4 text-zinc-500" />
+          <span className="font-mono text-[10px] uppercase tracking-widest font-bold text-zinc-400">
+            AI LEAK SCANNER
+          </span>
+          <span className="font-mono text-[10px] text-zinc-600">
+            // GEMINI 3.5 FLASH
+          </span>
+        </div>
+        <div className="flex items-center gap-4 text-[10px] font-mono text-zinc-600 tracking-wider">
+          <span>LIMIT: 5/MIN</span>
+          <span>MAX: 500KB</span>
+        </div>
       </div>
 
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/30 text-rose-400 p-4 rounded-lg text-sm">
+        <div className="bg-rose-500/10 border-b border-rose-500/30 text-rose-400 px-6 py-2.5 text-[10px] font-mono uppercase tracking-widest">
           {error}
         </div>
       )}
 
-      {/* Main Input Form */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <form onSubmit={handleScan} className="lg:col-span-2 bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-4">
-          <h3 className="font-semibold text-slate-200 flex items-center gap-2 text-sm uppercase tracking-wider">
-            <Terminal className="h-4 w-4 text-indigo-400" />
-            Scanner Input
-          </h3>
-
-          <div className="space-y-1">
-            <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">File Name</label>
-            <input
-              type="text"
-              required
-              value={fileName}
-              onChange={(e) => setFileName(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
-              placeholder="e.g. config.py, database.ts"
-            />
+      {/* IDE Layout: Input Bench + Results */}
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+        {/* Input Bench */}
+        <form onSubmit={handleScan} className="border-b border-zinc-800 bg-zinc-950 flex flex-col shrink-0">
+          {/* Terminal header bar */}
+          <div className="flex items-center justify-between bg-zinc-900 px-4 py-2 border-b border-zinc-800">
+            <div className="flex items-center gap-2 text-[10px] text-zinc-400 font-mono tracking-widest uppercase">
+              <Terminal className="h-3.5 w-3.5 text-zinc-500" />
+              <span>INPUT:</span>
+              <input
+                type="text"
+                required
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
+                className="bg-transparent border-none outline-none text-zinc-200 font-bold text-[10px] font-mono uppercase tracking-widest w-40"
+                placeholder="RAW_SNIPPET.PY"
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-mono text-zinc-600 tracking-widest">BYOK GEMINI-2.5-FLASH</span>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex items-center gap-2 px-4 py-1 bg-white hover:bg-zinc-200 disabled:opacity-50 text-zinc-950 rounded-none text-[10px] font-bold font-mono uppercase tracking-widest transition-colors cursor-pointer"
+              >
+                {loading ? (
+                  <>
+                    <RefreshCw className="h-3 w-3 animate-spin" />
+                    SCANNING...
+                  </>
+                ) : (
+                  <>
+                    <Scan className="h-3 w-3" />
+                    EXECUTE SCAN
+                  </>
+                )}
+              </button>
+            </div>
           </div>
-
-          <div className="space-y-1">
-            <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Source Code Snippet</label>
-            <textarea
-              required
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-300 focus:outline-none focus:border-indigo-500 resize-none"
-              placeholder="Paste raw script or config here..."
-              rows={12}
-            />
-          </div>
-
-          <div className="text-xs text-slate-500 flex justify-between items-center">
-            <span>Rate limit: 5 / min per tenant</span>
-            <span>Max payload size: 500 KB</span>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition-all cursor-pointer shadow-[0_4px_20px_rgba(99,102,241,0.3)]"
-          >
-            {loading ? (
-              <>
-                <RefreshCw className="h-4 w-4 animate-spin" />
-                Scanning Code with Gemini...
-              </>
-            ) : (
-              <>
-                <Scan className="h-4 w-4" />
-                Run Threat Exposure Scan
-              </>
-            )}
-          </button>
+          {/* Code textarea */}
+          <textarea
+            required
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="w-full bg-black border-none px-4 py-3 text-[11px] font-mono text-zinc-400 focus:outline-none resize-none leading-relaxed"
+            placeholder="// Paste raw source code, config, or script here for threat analysis..."
+            rows={8}
+          />
         </form>
 
-        {/* Results Screen */}
-        <div className="lg:col-span-3 space-y-6">
+        {/* Threat Advisory Results */}
+        <div className="flex-1 overflow-y-auto">
           {result ? (
-            <div className="space-y-6 animate-fadeIn">
-              {/* Score indicator */}
-              <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-slate-200">Analysis Completed</h3>
-                  <p className="text-xs text-slate-500 mt-1">Resource ID: {result.id}</p>
+            <div className="flex flex-col h-full">
+              {/* Result summary bar */}
+              <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-950 px-6 py-2.5 shrink-0">
+                <div className="flex items-center gap-4 text-[10px] font-mono text-zinc-500 tracking-widest uppercase">
+                  <span>SCAN ID: <span className="text-zinc-300">{result.id}</span></span>
+                  <span>FILE: <span className="text-zinc-300">{result.file_name}</span></span>
+                  <span>FINDINGS: <span className="text-zinc-300">{result.findings.length}</span></span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <span className="text-xs text-slate-400 uppercase tracking-wider">Risk Index</span>
-                    <h2 className={`text-3xl font-extrabold ${result.risk_score > 70 ? 'text-rose-500' : result.risk_score > 30 ? 'text-amber-500' : 'text-emerald-500'}`}>
-                      {result.risk_score} / 100
-                    </h2>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold">RISK INDEX:</span>
+                  <span className={`text-lg font-mono font-bold tracking-tight ${result.risk_score > 70 ? 'text-rose-500' : result.risk_score > 30 ? 'text-amber-500' : 'text-emerald-500'}`}>
+                    {result.risk_score}
+                  </span>
+                  <span className="text-[10px] font-mono text-zinc-600">/100</span>
                 </div>
               </div>
 
-              {/* Findings list */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-6 py-4 bg-slate-900/50 border-b border-slate-800">
-                  <h4 className="font-semibold text-slate-200 text-sm">Vulnerability Report Findings ({result.findings.length})</h4>
+              {/* Findings table */}
+              {result.findings.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center space-y-3 p-6">
+                  <ShieldCheck className="h-8 w-8 text-emerald-500" />
+                  <span className="font-mono text-xs text-zinc-300 uppercase tracking-widest font-bold">NO SECRETS DETECTED</span>
+                  <span className="font-mono text-[10px] text-zinc-600 uppercase tracking-widest">Gemini did not locate hardcoded authentication leaks in this snippet.</span>
                 </div>
-
-                {result.findings.length === 0 ? (
-                  <div className="p-12 text-center text-slate-400 space-y-2">
-                    <ShieldCheck className="h-10 w-10 text-emerald-500 mx-auto" />
-                    <h4 className="font-semibold text-slate-200">No Secrets Detected</h4>
-                    <p className="text-xs text-slate-500">Gemini did not locate any hardcoded authentication leaks in this snippet.</p>
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="bg-slate-950/20 border-b border-slate-800 text-slate-400 text-xs font-semibold uppercase tracking-wider">
-                          <th className="px-6 py-3">Line</th>
-                          <th className="px-6 py-3">Type</th>
-                          <th className="px-6 py-3">Severity</th>
-                          <th className="px-6 py-3">Confidence</th>
-                          <th className="px-6 py-3">Remediation</th>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="table-auto w-full text-left font-mono text-xs divide-y divide-zinc-800 border-collapse">
+                    <thead>
+                      <tr className="bg-zinc-950 text-zinc-500 text-[10px] font-bold uppercase tracking-widest">
+                        <th className="px-6 py-3 border-b border-zinc-800">LINE</th>
+                        <th className="px-6 py-3 border-b border-zinc-800">SECRET TYPE</th>
+                        <th className="px-6 py-3 border-b border-zinc-800">SEVERITY</th>
+                        <th className="px-6 py-3 border-b border-zinc-800">CONFIDENCE</th>
+                        <th className="px-6 py-3 border-b border-zinc-800">REMEDIATION</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
+                      {result.findings.map((f, idx) => (
+                        <tr key={idx} className="hover:bg-zinc-900/50 transition-colors">
+                          <td className="px-6 py-3 font-bold text-white">#{f.line_number}</td>
+                          <td className="px-6 py-3 font-bold text-zinc-300">{f.secret_type}</td>
+                          <td className="px-6 py-3">{getSeverityBadge(f.severity)}</td>
+                          <td className="px-6 py-3 text-zinc-400">{(f.confidence_score * 100).toFixed(0)}%</td>
+                          <td className="px-6 py-3 text-[11px] text-zinc-400 leading-relaxed max-w-xs">{f.remediation}</td>
                         </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-800/40 text-xs text-slate-300">
-                        {result.findings.map((f, idx) => (
-                          <tr key={idx} className="hover:bg-slate-800/20">
-                            <td className="px-6 py-4 font-mono font-bold text-indigo-400">#{f.line_number}</td>
-                            <td className="px-6 py-4 font-semibold">{f.secret_type}</td>
-                            <td className="px-6 py-4">{getSeverityBadge(f.severity)}</td>
-                            <td className="px-6 py-4 font-mono">{(f.confidence_score * 100).toFixed(0)}%</td>
-                            <td className="px-6 py-4 text-slate-400 leading-relaxed max-w-xs">{f.remediation}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           ) : (
-            <div className="bg-slate-900 border border-slate-800 rounded-xl h-full min-h-[300px] flex flex-col items-center justify-center text-center p-12 text-slate-500 space-y-4">
-              <FileWarning className="h-12 w-12 text-slate-700" />
-              <div>
-                <h4 className="font-semibold text-slate-300 text-sm">Vulnerability Report</h4>
-                <p className="text-xs text-slate-500 max-w-sm mt-1 mx-auto">
-                  Submit a source code snippet to generate an interactive compliance risk assessment.
-                </p>
-              </div>
+            <div className="flex-1 flex flex-col items-center justify-center text-center space-y-3 p-12 h-full">
+              <FileWarning className="h-8 w-8 text-zinc-800" />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-600 font-bold">
+                THREAT ADVISORY REPORT
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-700 max-w-sm">
+                Submit a source code snippet above to generate an interactive compliance risk assessment.
+              </span>
             </div>
           )}
         </div>

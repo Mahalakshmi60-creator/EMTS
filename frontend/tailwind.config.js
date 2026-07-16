@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+      },
       colors: {
         // Aesthetic dark/glassmorphic custom colors
         border: "hsl(var(--border) / <alpha-value>)",
