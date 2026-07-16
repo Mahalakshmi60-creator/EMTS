@@ -8,7 +8,7 @@ from app.auth import get_current_user, User
 router = APIRouter(prefix="/organizations", tags=["Organizations"])
 
 @router.post("", response_model=OrganizationResponse)
-def create_organization(payload: OrganizationCreate, db: Session = Depends(get_db)):
+def create_organization(payload: OrganizationCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     # Create a new tenant organization
     existing = db.query(Organization).filter(Organization.name == payload.name).first()
     if existing:

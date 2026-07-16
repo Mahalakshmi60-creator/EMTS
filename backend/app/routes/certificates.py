@@ -51,9 +51,11 @@ def create_certificate(payload: CertificateCreate, request: Request, db: Session
     return cert
 
 @router.get("", response_model=List[CertificateResponse])
-def list_certificates(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    # Absolute Tenant Isolation: Filter list by active user's organization
-    certs = db.query(Certificate).filter(Certificate.organization_id == current_user.organization_id).all()
+def list_certificates(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    # Absolute Tenant Isolation: Filter list by active user's organization with pagination
+    if limit > 200:
+        limit = 200
+    certs = db.query(Certificate).filter(Certificate.organization_id == current_user.organization_id).offset(skip).limit(limit).all()
     
     # Recalculate status values in case expiration date has passed
     status_changed = False

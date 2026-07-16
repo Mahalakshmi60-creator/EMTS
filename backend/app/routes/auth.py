@@ -30,7 +30,7 @@ def register(payload: UserRegister, request: Request, db: Session = Depends(get_
     user = User(
         email=payload.email,
         hashed_password=hashed_pwd,
-        role=payload.role or "operator",
+        role="operator",  # SECURITY: Always default to operator. Admin promotion is a separate workflow.
         organization_id=org.id
     )
     db.add(user)

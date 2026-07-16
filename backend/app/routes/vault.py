@@ -6,7 +6,7 @@ from uuid import UUID
 from app.database import get_db
 from app.models import VaultSecret, AuditLog
 from app.schemas import SecretCreate, SecretResponse, SecretRevealResponse, SecretRotateRequest
-from app.auth import get_current_user, User
+from app.auth import get_current_user, User, require_role
 from app.crypto import crypto_manager
 
 router = APIRouter(prefix="/vault", tags=["Secrets Vault"])
@@ -41,9 +41,11 @@ def create_secret(payload: SecretCreate, request: Request, db: Session = Depends
     return secret
 
 @router.get("", response_model=List[SecretResponse])
-def list_secrets(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    # Absolute Tenant Isolation: Scoped strictly to user's organization
-    secrets = db.query(VaultSecret).filter(VaultSecret.organization_id == current_user.organization_id).all()
+def list_secrets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    # Absolute Tenant Isolation with pagination guard
+    if limit > 200:
+        limit = 200
+    secrets = db.query(VaultSecret).filter(VaultSecret.organization_id == current_user.organization_id).offset(skip).limit(limit).all()
     return secrets
 
 @router.get("/{secret_id}", response_model=SecretResponse)

@@ -57,7 +57,9 @@ def scan_code(payload: ScanRequest, request: Request, db: Session = Depends(get_
     except ValueError as ve:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(ve))
     except Exception as e:
+        import logging
+        logging.error(f"AI Scanner internal error: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"AI Exposure Scan failed: {str(e)}"
+            detail="AI scan service is temporarily unavailable. Please try again."
         )

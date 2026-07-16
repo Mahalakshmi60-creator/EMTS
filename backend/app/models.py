@@ -14,7 +14,7 @@ class Organization(Base):
     users = relationship("User", back_populates="organization", cascade="all, delete-orphan")
     secrets = relationship("VaultSecret", back_populates="organization", cascade="all, delete-orphan")
     certificates = relationship("Certificate", back_populates="organization", cascade="all, delete-orphan")
-    audit_logs = relationship("AuditLog", back_populates="organization", cascade="all, delete-orphan")
+    audit_logs = relationship("AuditLog", back_populates="organization", cascade="save-update, merge")  # SECURITY: No cascade-delete — audit logs are immutable
     scan_results = relationship("ScanResult", back_populates="organization", cascade="all, delete-orphan")
 
 class User(Base):
