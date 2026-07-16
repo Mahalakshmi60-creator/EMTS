@@ -5,6 +5,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.database import Base
 
+
 class Organization(Base):
     __tablename__ = "organizations"
 
